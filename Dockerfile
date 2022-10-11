@@ -1,7 +1,7 @@
 #
 # firefox Dockerfile
 #
-# https://github.com/jlesage/docker-firefox
+# Forked from https://github.com/jlesage/docker-firefox
 #
 
 # Build the membarrier check tool.
@@ -66,19 +66,19 @@ RUN \
 RUN \
     add-pkg \
         # Icons used by folder/file selection window (when saving as).
-        gnome-icon-theme \
+#        gnome-icon-theme \
         # A font is needed.
         ttf-dejavu \
         # The following package is used to send key presses to the X process.
         xdotool
 
 # Set default settings.
-RUN \
-    CFG_FILE="$(ls /usr/lib/firefox/browser/defaults/preferences/firefox-branding.js)" && \
-    echo '' >> "$CFG_FILE" && \
-    echo '// Default download directory.' >> "$CFG_FILE" && \
-    echo 'pref("browser.download.dir", "/config/downloads");' >> "$CFG_FILE" && \
-    echo 'pref("browser.download.folderList", 2);' >> "$CFG_FILE"
+#RUN \
+#    CFG_FILE="$(ls /usr/lib/firefox/browser/defaults/preferences/firefox-branding.js)" && \
+#    echo '' >> "$CFG_FILE" && \
+#    echo '// Default download directory.' >> "$CFG_FILE" && \
+#    echo 'pref("browser.download.dir", "/config/downloads");' >> "$CFG_FILE" && \
+#    echo 'pref("browser.download.folderList", 2);' >> "$CFG_FILE"
 
 # Install profile-cleaner.
 #RUN \
@@ -129,5 +129,5 @@ LABEL \
       org.label-schema.name="firefox" \
       org.label-schema.description="Docker container for Firefox" \
       org.label-schema.version="${DOCKER_IMAGE_VERSION:-unknown}" \
-      org.label-schema.vcs-url="https://github.com/jlesage/docker-firefox" \
+      org.label-schema.vcs-url="https://github.com/Quarry8282/docker-firefox" \
       org.label-schema.schema-version="1.0"
