@@ -1,8 +1,8 @@
 name: Docker image CI/CD
 
 env:
-  DOCKER_IMAGE_NAME: jlesage/firefox
-  PLATFORMS: linux/amd64,linux/386,linux/arm/v7,linux/arm64/v8
+  DOCKER_IMAGE_NAME: acting3968/firefox
+  PLATFORMS: linux/amd64
 
 on:
   push:
@@ -98,11 +98,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: arm,arm64,ppc64le,mips64,s390x
-
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -128,26 +123,3 @@ jobs:
         if: ${{ steps.prep.outputs.is_release == 'yes' }}
         run: |
           docker buildx imagetools inspect ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.prep.outputs.version }}
-
-      - name: Dockerhub description
-        if: ${{ steps.prep.outputs.release_type == 'standard' }}
-        uses: peter-evans/dockerhub-description@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: ${{ env.DOCKER_IMAGE_NAME }}
-          readme-filepath: DOCKERHUB.md
-
-  notification:
-    name: Notification
-    needs: [ build ]
-    runs-on: ubuntu-20.04
-    if: ${{ always() }}
-
-    steps:
-      - name: Pushover notification
-        uses: desiderati/github-action-pushover@v1
-        with:
-          job-status: ${{ needs.build.result }}
-          pushover-api-token: ${{ secrets.PUSHOVER_API_TOKEN }}
-          pushover-user-key: ${{ secrets.PUSHOVER_USER_KEY }}
