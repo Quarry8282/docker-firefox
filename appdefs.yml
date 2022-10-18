@@ -6,7 +6,7 @@
 # This file is used as data source to generate README.md and unRAID template files
 # from Jinja2 templates.
 #
-#
+
 app:
   id: 14
   name: firefox
@@ -119,6 +119,10 @@ app:
               for more details.
             - Make sure the kernel of your Linux distribution is up-to-date.
   changelog:
+    - version: 22.10.3
+      date: 2022-10-14
+      changes:
+        - 'Fixed scenario where a reverse proxy with routing based un URL path is used.'
     - version: 22.10.2
       date: 2022-10-10
       changes:
