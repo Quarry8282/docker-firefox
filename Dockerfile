@@ -19,7 +19,8 @@ FROM acting3968/baseimage-gui:alpine-edge-v1
 ARG DOCKER_IMAGE_VERSION=
 
 # Define software versions.
-ARG FIREFOX_VERSION=107.0-r1
+
+ARG FIREFOX_VERSION=107.0.1-r2
 ARG JSONLZ4_VERSION=c4305b8
 ARG LZ4_VERSION=1.8.1.2
 #ARG PROFILE_CLEANER_VERSION=2.36
@@ -66,19 +67,23 @@ RUN \
 RUN \
     add-pkg \
         # Icons used by folder/file selection window (when saving as).
-#        gnome-icon-theme \
+        adwaita-icon-theme \
         # A font is needed.
-        ttf-dejavu \
+        font-cantarell \
         # The following package is used to send key presses to the X process.
-        xdotool
+        xdotool \
+        && \
+    # Remove unneeded icons.
+    find /usr/share/icons/Adwaita -type d -mindepth 1 -maxdepth 1 -not -name 16x16 -not -name scalable -exec rm -rf {} ';' && \
+    true
 
 # Set default settings.
-#RUN \
-#    CFG_FILE="$(ls /usr/lib/firefox/browser/defaults/preferences/firefox-branding.js)" && \
-#    echo '' >> "$CFG_FILE" && \
-#    echo '// Default download directory.' >> "$CFG_FILE" && \
-#    echo 'pref("browser.download.dir", "/config/downloads");' >> "$CFG_FILE" && \
-#    echo 'pref("browser.download.folderList", 2);' >> "$CFG_FILE"
+RUN \
+    CFG_FILE="/usr/lib/firefox/browser/defaults/preferences/firefox-branding.js" && \
+    echo '// Default download directory.' >> "$CFG_FILE" && \
+    echo 'pref("browser.download.dir", "/config/downloads");' >> "$CFG_FILE" && \
+    echo 'pref("browser.download.folderList", 2);' >> "$CFG_FILE"
+
 
 # Install profile-cleaner.
 #RUN \
