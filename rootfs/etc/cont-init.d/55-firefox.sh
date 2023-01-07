@@ -17,22 +17,6 @@ fi
 # Copy default preferences.
 [ -f /config/profile/prefs.js ] || cp /defaults/prefs.js /config/profile/prefs.js
 
-# Verify the size of /dev/shm.
-SHM_SIZE_MB="$(df -m /dev/shm | tail -n 1 | tr -s ' ' | cut -d ' ' -f2)"
-if [ "$SHM_SIZE_MB" -eq 64 ]; then
-   echo 'SHM_CHECK_FAIL' > /tmp/.firefox_shm_check
-else
-   echo 'SHM_CHECK_PASS' > /tmp/.firefox_shm_check
-fi
-chown $USER_ID:$GROUP_ID /tmp/.firefox_shm_check
-
-if /usr/bin/membarrier_check 2>/dev/null; then
-   echo 'MEMBARRIER_CHECK_PASS' > /tmp/.firefox_membarrier_check
-else
-   echo 'MEMBARRIER_CHECK_FAIL' > /tmp/.firefox_membarrier_check
-fi
-chown $USER_ID:$GROUP_ID /tmp/.firefox_membarrier_check
-
 # Clean/optimize Firefox databases.
 #if [ -d /config/.mozilla/firefox ] && [ -d /config/profile ]; then
 #    [ -f /config/.mozilla/firefox/profiles.ini ] || cp /defaults/profiles.ini /config/.mozilla/firefox/

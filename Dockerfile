@@ -19,8 +19,7 @@ FROM acting3968/baseimage-gui:alpine-edge-v1
 ARG DOCKER_IMAGE_VERSION=
 
 # Define software versions.
-
-ARG FIREFOX_VERSION=107.0.1-r2
+ARG FIREFOX_VERSION=108.0.2-r0
 ARG JSONLZ4_VERSION=c4305b8
 ARG LZ4_VERSION=1.8.1.2
 #ARG PROFILE_CLEANER_VERSION=2.36
@@ -102,11 +101,6 @@ RUN \
 #    # Cleanup.
 #    del-pkg build-dependencies && \
 #    rm -rf /tmp/* /tmp/.[!.]*
-
-# Enable log monitoring.
-RUN \
-    sed-patch 's|LOG_FILES=|LOG_FILES=/config/log/firefox/error.log|' /etc/logmonitor/logmonitor.conf && \
-    sed-patch 's|STATUS_FILES=|STATUS_FILES=/tmp/.firefox_shm_check,/tmp/.firefox_membarrier_check|' /etc/logmonitor/logmonitor.conf
 
 # Generate and install favicons.
 RUN \
