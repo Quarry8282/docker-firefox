@@ -8,7 +8,7 @@ installation or configuration needed on the client side) or via any VNC client.
 
 ---
 
-[![Firefox logo](https://images.weserv.nl/?url=raw.githubusercontent.com/jlesage/docker-templates/master/jlesage/images/firefox-icon.png&w=200)](https://www.mozilla.org/en-US/firefox/)[![Firefox](https://images.placeholders.dev/?width=224&height=110&fontFamily=Georgia,sans-serif&fontWeight=400&fontSize=52&text=Firefox&bgColor=rgba(0,0,0,0.0)&textColor=rgba(121,121,121,1))](https://www.mozilla.org/en-US/firefox/)
+[![Firefox logo](https://images.weserv.nl/?url=raw.githubusercontent.com/jlesage/docker-templates/master/jlesage/images/firefox-icon.png&w=110)](https://www.mozilla.org/en-US/firefox/)[![Firefox](https://images.placeholders.dev/?width=224&height=110&fontFamily=monospace&fontWeight=400&fontSize=52&text=Firefox&bgColor=rgba(0,0,0,0.0)&textColor=rgba(121,121,121,1))](https://www.mozilla.org/en-US/firefox/)
 
 Mozilla Firefox is a free and open-source web browser developed by Mozilla
 Foundation and its subsidiary, Mozilla Corporation.
@@ -20,6 +20,7 @@ Foundation and its subsidiary, Mozilla Corporation.
    * [Quick Start](#quick-start)
    * [Usage](#usage)
       * [Environment Variables](#environment-variables)
+         * [Deployment Considerations](#deployment-considerations)
       * [Data Volumes](#data-volumes)
       * [Ports](#ports)
       * [Changing Parameters of a Running Container](#changing-parameters-of-a-running-container)
@@ -91,13 +92,13 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |----------------|----------------------------------------------|---------|
 |`USER_ID`| ID of the user the application runs as.  See [User/Group IDs](#usergroup-ids) to better understand when this should be set. | `1000` |
 |`GROUP_ID`| ID of the group the application runs as.  See [User/Group IDs](#usergroup-ids) to better understand when this should be set. | `1000` |
-|`SUP_GROUP_IDS`| Comma-separated list of supplementary group IDs of the application. | `""` |
+|`SUP_GROUP_IDS`| Comma-separated list of supplementary group IDs of the application. | (no value) |
 |`UMASK`| Mask that controls how file permissions are set for newly created files. The value of the mask is in octal notation.  By default, the default umask value is `0022`, meaning that newly created files are readable by everyone, but only writable by the owner.  See the online umask calculator at http://wintelguy.com/umask-calc.pl. | `0022` |
 |`LANG`| Set the [locale](https://en.wikipedia.org/wiki/Locale_(computer_software)), which defines the application's language, **if supported**.  Format of the locale is `language[_territory][.codeset]`, where language is an [ISO 639 language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes), territory is an [ISO 3166 country code](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) and codeset is a character set, like `UTF-8`.  For example, Australian English using the UTF-8 encoding is `en_AU.UTF-8`. | `en_US.UTF-8` |
 |`TZ`| [TimeZone](http://en.wikipedia.org/wiki/List_of_tz_database_time_zones) used by the container.  Timezone can also be set by mapping `/etc/localtime` between the host and the container. | `Etc/UTC` |
 |`KEEP_APP_RUNNING`| When set to `1`, the application will be automatically restarted when it crashes or terminates. | `0` |
 |`APP_NICENESS`| Priority at which the application should run.  A niceness value of -20 is the highest priority and 19 is the lowest priority.  The default niceness value is 0.  **NOTE**: A negative niceness (priority increase) requires additional permissions.  In this case, the container should be run with the docker option `--cap-add=SYS_NICE`. | `0` |
-|`INSTALL_PACKAGES`| Space-separated list of packages to install during the startup of the container.  Packages are installed from the repository of the Linux distribution this container is based on.  **ATTENTION**: Container functionality can be affected when installing a package that overrides existing container files (e.g. binaries). | `""` |
+|`INSTALL_PACKAGES`| Space-separated list of packages to install during the startup of the container.  Packages are installed from the repository of the Linux distribution this container is based on.  **ATTENTION**: Container functionality can be affected when installing a package that overrides existing container files (e.g. binaries). | (no value) |
 |`CONTAINER_DEBUG`| Set to `1` to enable debug logging. | `0` |
 |`DISPLAY_WIDTH`| Width (in pixels) of the application's window. | `1920` |
 |`DISPLAY_HEIGHT`| Height (in pixels) of the application's window. | `1080` |
@@ -107,10 +108,48 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`SECURE_CONNECTION_CERTS_CHECK_INTERVAL`| Interval, in seconds, at which the system verifies if web or VNC certificates have changed.  When a change is detected, the affected services are automatically restarted.  A value of `0` disables the check. | `60` |
 |`WEB_LISTENING_PORT`| Port used by the web server to serve the UI of the application.  This port is used internally by the container and it is usually not required to be changed.  By default, a container is created with the default bridge network, meaning that, to be accessible, each internal container port must be mapped to an external port (using the `-p` or `--publish` argument).  However, if the container is created with another network type, changing the port used by the container might be useful to prevent conflict with other services/containers.  **NOTE**: a value of `-1` disables listening, meaning that the application's UI won't be accessible over HTTP/HTTPs. | `5800` |
 |`VNC_LISTENING_PORT`| Port used by the VNC server to serve the UI of the application.  This port is used internally by the container and it is usually not required to be changed.  By default, a container is created with the default bridge network, meaning that, to be accessible, each internal container port must be mapped to an external port (using the `-p` or `--publish` argument).  However, if the container is created with another network type, changing the port used by the container might be useful to prevent conflict with other services/containers.  **NOTE**: a value of `-1` disables listening, meaning that the application's UI won't be accessible over VNC. | `5900` |
-|`VNC_PASSWORD`| Password needed to connect to the application's GUI.  See the [VNC Password](#vnc-password) section for more details. | `""` |
+|`VNC_PASSWORD`| Password needed to connect to the application's GUI.  See the [VNC Password](#vnc-password) section for more details. | (no value) |
 |`ENABLE_CJK_FONT`| When set to `1`, open-source computer font `WenQuanYi Zen Hei` is installed.  This font contains a large range of Chinese/Japanese/Korean characters. | `0` |
-|`FF_OPEN_URL`| The URL to open when Firefox starts. | (unset) |
+|`FF_OPEN_URL`| The URL to open when Firefox starts. | (no value) |
 |`FF_KIOSK`| Set to `1` to enable kiosk mode.  This mode launches Firefox in a very restricted and limited mode best suitable for public areas or customer-facing displays. | `0` |
+
+#### Deployment Considerations
+
+Many tools used to manage Docker containers extract environment variables
+defined by the Docker image and use them to create/deploy the container.  For
+example, this is done by:
+  - The Docker application on Synology NAS
+  - The Container Station on QNAP NAS
+  - Portainer
+  - etc.
+
+While this can be useful for the user to adjust the value of environment
+variables to fit its needs, it can also be confusing and dangerous to keep all
+of them.
+
+A good pratice is to set/keep only the variables that are needed for the
+container to behave as desired in a specific setup.  If the value of variable is
+kept to its default value, it means that it can be removed.  Keep in mind that
+all variables are optional, meaning that none of them is required for the
+container to start.
+
+Removing environment variables that are not needed provides some advantages:
+
+  - Prevents keeping variables that are no longer used by the container.  Over
+    time, with image updates, some variables might be removed.
+  - Allows the Docker image to change/fix a default value.  Again, with image
+    updates, the default value of a variable might be changed to fix an issue,
+    or to better support a new feature.
+  - Prevents changes to a variable that might affect the correct function of
+    the container.  Some undocumented variables, like `PATH` or `ENV`, are
+    required to be exposed, but are not meant to be changed by users.  However,
+    container management tools still show these variables to users.
+  - There is a bug with the Container Station on QNAP and the Docker application
+    on Synology, where an environment variable without value might not be
+    allowed.  This behavior is wrong: it's absolutely fine to have a variable
+    without value.  In fact, this container does have variables without value by
+    default.  Thus, removing uneeded variables is a good way to prevent
+    deployment issue on these devices.
 
 ### Data Volumes
 
