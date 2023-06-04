@@ -1,7 +1,12 @@
 # Docker container for Firefox
-[![Docker Image Size](https://img.shields.io/docker/image-size/jlesage/firefox/latest)](https://hub.docker.com/r/jlesage/firefox/tags) [![Build Status](https://github.com/jlesage/docker-firefox/actions/workflows/build-image.yml/badge.svg?branch=master)](https://github.com/jlesage/docker-firefox/actions/workflows/build-image.yml) [![GitHub Release](https://img.shields.io/github/release/jlesage/docker-firefox.svg)](https://github.com/jlesage/docker-firefox/releases/latest) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/JocelynLeSage)
+[![Release](https://img.shields.io/github/release/jlesage/docker-firefox.svg?logo=github&style=for-the-badge)](https://github.com/jlesage/docker-firefox/releases/latest)
+[![Docker Image Size](https://img.shields.io/docker/image-size/jlesage/firefox/latest?logo=docker&style=for-the-badge)](https://hub.docker.com/r/jlesage/firefox/tags)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jlesage/firefox?label=Pulls&logo=docker&style=for-the-badge)](https://hub.docker.com/r/jlesage/firefox)
+[![Docker Stars](https://img.shields.io/docker/stars/jlesage/firefox?label=Stars&logo=docker&style=for-the-badge)](https://hub.docker.com/r/jlesage/firefox)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/jlesage/docker-firefox/build-image.yml?logo=github&branch=master&style=for-the-badge)](https://github.com/jlesage/docker-firefox/actions/workflows/build-image.yml)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=for-the-badge)](https://paypal.me/JocelynLeSage)
 
-This is a Docker container for [Firefox](https://www.mozilla.org/en-US/firefox/).
+This project implements a Docker container for [Firefox](https://www.mozilla.org/en-US/firefox/).
 
 The GUI of the application is accessed through a modern web browser (no
 installation or configuration needed on the client side) or via any VNC client.
@@ -75,6 +80,7 @@ docker run [-d] \
     [-p <HOST_PORT>:<CONTAINER_PORT>]... \
     jlesage/firefox
 ```
+
 | Parameter | Description |
 |-----------|-------------|
 | -d        | Run the container in the background.  If not set, the container runs in the foreground. |
@@ -163,15 +169,21 @@ format: `<HOST_DIR>:<CONTAINER_DIR>[:PERMISSIONS]`.
 
 ### Ports
 
-Here is the list of ports used by the container.  They can be mapped to the host
-via the `-p` parameter (one per port mapping).  Each mapping is defined in the
-following format: `<HOST_PORT>:<CONTAINER_PORT>`.  The port number inside the
-container cannot be changed, but you are free to use any port on the host side.
+Here is the list of ports used by the container.
 
-| Port | Mapping to host | Description |
-|------|-----------------|-------------|
-| 5800 | Optional | Port to access the application's GUI via the web interface.  Mapping to the host is optional if access through the web interface is not wanted.  For a container not using the default bridge network, the port can be changed with the `WEB_LISTENING_PORT` environment variable. |
-| 5900 | Optional | Port to access the application's GUI via the VNC protocol.  Mapping to the host is optional if access through the VNC protocol is not wanted.  For a container not using the default bridge network, the port can be changed with the `VNC_LISTENING_PORT` environment variable. |
+When using the default bridge network, ports can be mapped to the host via the
+`-p` parameter (one per port mapping).  Each mapping is defined with the
+following format: `<HOST_PORT>:<CONTAINER_PORT>`.  The port number used inside
+the container might not be changeable, but you are free to use any port on the
+host side.
+
+See the [Docker Container Networking](https://docs.docker.com/config/containers/container-networking)
+documentation for more details.
+
+| Port | Protocol | Mapping to host | Description |
+|------|----------|-----------------|-------------|
+| 5800 | TCP | Optional | Port to access the application's GUI via the web interface.  Mapping to the host is optional if access through the web interface is not wanted.  For a container not using the default bridge network, the port can be changed with the `WEB_LISTENING_PORT` environment variable. |
+| 5900 | TCP | Optional | Port to access the application's GUI via the VNC protocol.  Mapping to the host is optional if access through the VNC protocol is not wanted.  For a container not using the default bridge network, the port can be changed with the `VNC_LISTENING_PORT` environment variable. |
 
 ### Changing Parameters of a Running Container
 
@@ -321,11 +333,13 @@ Assuming that container's ports are mapped to the same host's ports, the
 graphical interface of the application can be accessed via:
 
   * A web browser:
+
 ```
 http://<HOST IP ADDR>:5800
 ```
 
   * Any VNC client:
+
 ```
 <HOST IP ADDR>:5900
 ```

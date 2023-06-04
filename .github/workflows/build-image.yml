@@ -22,6 +22,25 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - name: Free disk space
+        run: |
+          # Free disk space.
+          echo "::group::Before"
+          df -h /
+          echo "::endgroup::"
+          echo "::group::Removing unneeded softwares and files..."
+          for DIR in /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          do
+            if [ -d "$DIR" ]; then
+                echo "Removing $DIR..."
+                sudo rm -r "$DIR"
+            fi
+          done
+          echo "::endgroup::"
+          echo "::group::After"
+          df -h /
+          echo "::endgroup::"
+    
       - name: Prepare
         id: prep
         run: |
@@ -87,9 +106,6 @@ jobs:
           echo "tags=${TAGS}" >> $GITHUB_OUTPUT
           #echo "build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -116,3 +132,4 @@ jobs:
         if: ${{ steps.prep.outputs.is_release == 'yes' }}
         run: |
           docker buildx imagetools inspect ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.prep.outputs.version }}
+
